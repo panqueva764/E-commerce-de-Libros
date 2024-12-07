@@ -1,25 +1,19 @@
-// src/repositories/orderRepository.js
-const { Order } = require('../models/order');
+let orders = [];
+let nextId = 1;
 
 class OrderRepository {
-  async create(data) {
-    return Order.create(data); // Crear una nueva orden
+  create(data) {
+    const order = { id: nextId++, ...data };
+    orders.push(order);
+    return order;
   }
 
-  async findAll() {
-    return Order.findAll(); // Obtener todas las órdenes
+  findAll() {
+    return orders;
   }
 
-  async findById(id) {
-    return Order.findByPk(id); // Obtener una orden por ID
-  }
-
-  async updateStatus(id, status) {
-    const order = await Order.findByPk(id);
-    if (!order) {
-      throw new Error('Order not found');
-    }
-    return order.update({ status });
+  findById(id) {
+    return orders.find(order => order.id === id);
   }
 }
 

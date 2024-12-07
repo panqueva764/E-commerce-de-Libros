@@ -1,21 +1,30 @@
-// src/services/orderervice.js
+const Order = require('../models/order');
 const orderRepository = require('../repositories/orderRepository');
+const BillingSystem = require('../models/system/BillingSystem');
+const InventorySystem = require('../models/system/InventorySystem');
+const ShippingSystem = require('../models/system/ShippingSystem');
 
 class OrderService {
-  async createOrder(data) {
-    return orderRepository.create(data); // Crear una nueva orden
+  createOrder(data) {
+    return orderRepository.create(data);
   }
 
-  async getAllOrders() {
-    return orderRepository.findAll(); // Obtener todas las órdenes
+  confirmOrder(id) {
+    const orderData = orderRepository.findById(Number(id));
+    if (!orderData) throw new Error('Order not found');
+    const order = new Order(orderData.id, orderData);
+
+    // Agregar sistemas suscriptores
+    order.addSubscriber(new BillingSystem());
+    order.addSubscriber(new InventorySystem());
+    order.addSubscriber(new ShippingSystem());
+
+    order.confirmOrder();
+    return order;
   }
 
-  async getOrderById(id) {
-    return orderRepository.findById(id); // Obtener una orden por ID
-  }
-
-  async updateOrderStatus(id, status) {
-    return orderRepository.updateStatus(id, status); // Actualizar el estado de la orden
+  getAllOrders() {
+    return orderRepository.findAll();
   }
 }
 

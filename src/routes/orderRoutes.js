@@ -6,9 +6,37 @@ const orderController = require('../controllers/orderController');
 /**
  * @swagger
  * /api/orders:
+ *   get:
+ *     summary: Obtiene todas las órdenes
+ *     description: Devuelve una lista de todas las órdenes en el sistema.
+ *     responses:
+ *       200:
+ *         description: Lista de órdenes
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ *                 properties:
+ *                   id:
+ *                     type: integer
+ *                     example: 1
+ *                   customerName:
+ *                     type: string
+ *                     example: "John Doe"
+ *                   totalAmount:
+ *                     type: number
+ *                     example: 120.5
+ */
+router.get('/orders', orderController.getOrders);
+
+/**
+ * @swagger
+ * /api/orders:
  *   post:
- *     summary: Crear una nueva orden
- *     tags: [Orders]
+ *     summary: Crea una nueva orden
+ *     description: Crea una nueva orden en el sistema.
  *     requestBody:
  *       required: true
  *       content:
@@ -18,75 +46,71 @@ const orderController = require('../controllers/orderController');
  *             properties:
  *               customerName:
  *                 type: string
- *               customerEmail:
- *                 type: string
+ *                 example: "John Doe"
  *               totalAmount:
  *                 type: number
- *               status:
- *                 type: string
+ *                 example: 120.5
  *     responses:
- *       200:
- *         description: Orden creada correctamente
+ *       201:
+ *         description: Orden creada
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 id:
+ *                   type: integer
+ *                   example: 1
+ *                 customerName:
+ *                   type: string
+ *                   example: "John Doe"
+ *                 totalAmount:
+ *                   type: number
+ *                   example: 120.5
  */
 router.post('/orders', orderController.createOrder);
 
 /**
  * @swagger
- * /api/orders:
- *   get:
- *     summary: Obtener todas las órdenes
- *     tags: [Orders]
- *     responses:
- *       200:
- *         description: Listado de todas las órdenes
- */
-router.get('/orders', orderController.getOrders);
-
-/**
- * @swagger
- * /api/orders/{id}:
- *   get:
- *     summary: Obtener una orden por ID
- *     tags: [Orders]
- *     parameters:
- *       - in: path
- *         name: id
- *         required: true
- *         description: ID de la orden a consultar
- *         schema:
- *           type: integer
- *     responses:
- *       200:
- *         description: Detalles de la orden
- */
-router.get('/orders/:id', orderController.getOrder);
-
-/**
- * @swagger
- * /api/orders/{id}/status:
+ * /api/orders/{id}/confirm:
  *   put:
- *     summary: Actualizar el estado de una orden
- *     tags: [Orders]
+ *     summary: Confirma una orden
+ *     description: Cambia el estado de la orden a "confirmada" y notifica a los sistemas interesados.
  *     parameters:
  *       - in: path
  *         name: id
  *         required: true
- *         description: ID de la orden a actualizar
+ *         description: El ID de la orden a confirmar.
  *         schema:
  *           type: integer
- *       - in: body
- *         name: status
- *         description: Nuevo estado de la orden
- *         required: true
- *         schema:
- *           type: object
- *           properties:
- *             status:
- *               type: string
+ *           example: 1
  *     responses:
  *       200:
- *         description: Estado de la orden actualizado correctamente
+ *         description: Orden confirmada y notificaciones enviadas
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Order confirmed"
+ *                 order:
+ *                   type: object
+ *                   properties:
+ *                     id:
+ *                       type: integer
+ *                       example: 1
+ *                     customerName:
+ *                       type: string
+ *                       example: "John Doe"
+ *                     totalAmount:
+ *                       type: number
+ *                       example: 120.5
+ *                     status:
+ *                       type: string
+ *                       example: "confirmed"
  */
-router.put('/orders/:id/status', orderController.updateOrderStatus);
+router.put('/orders/:id/confirm', orderController.confirmOrder);
 
 module.exports = router;

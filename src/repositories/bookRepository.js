@@ -58,7 +58,6 @@ class BookRepository {
     // Devolver el libro: marcarlo como disponible
     await book.update({ isAvailable: true });
 
-    // También puedes actualizar el préstamo con la fecha de devolución
     await loan.update({ returnDate: new Date() });
 
     return book;

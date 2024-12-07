@@ -1,7 +1,6 @@
 // src/models/book.js
 const { Sequelize, DataTypes } = require('sequelize');
-const sequelize = require('../config/database'); // Asegúrate de que la conexión esté bien
-
+const sequelize = require('../config/database');
 const Book = sequelize.define('Book', {
   title: {
     type: DataTypes.STRING,
@@ -25,4 +24,4 @@ const Book = sequelize.define('Book', {
   }
 });
 
-module.exports = { Book }; // Exporta el modelo correctamente
+module.exports = { Book };
